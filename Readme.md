@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Дмитрий Спиридонов](https://up.htmlacademy.ru/javascript/11/user/254645).
-* Наставник: `Неизвестно`.
+* Наставник: [Егор Огарков](https://htmlacademy.ru/profile/id58697).
 
 ---
 
