@@ -1,6 +1,7 @@
 'use strict';
 
 var ADS_COUNT = 8;
+var MAX_GUESTS_PER_ROOM = 3;
 
 var OFFER_TITLES = [
   'Большая уютная квартира',
@@ -46,6 +47,14 @@ var FEATURES = [
   'conditioner',
 ];
 
+var generateRandomInclusive = function (lowBound, highBound) {
+  return lowBound + Math.floor(Math.random() * (highBound - lowBound + 1));
+};
+
+var generateRandomIndex = function (arrayLength) {
+  return Math.floor(Math.random() * arrayLength);
+};
+
 var generateAds = function () {
   var ads = [];
   var avatarBase = 'img/avatars/user';
@@ -60,33 +69,31 @@ var generateAds = function () {
   var roomsHighBound = 5;
 
   for (var i = 0; i < ADS_COUNT; i++) {
-    var titleIndex = Math.floor(Math.random() * offerTitles.length);
-    var locationX = locationXLowBound + Math.floor(Math.random() * (locationXHighBound - locationXLowBound + 1));
-    var locationY = locationYLowBound + Math.floor(Math.random() * (locationYHighBound - locationYLowBound + 1));
-    var featuresCount = Math.floor(Math.random() * (FEATURES.length + 1));
+    var titleIndex = generateRandomIndex(offerTitles.length);
+    var locationX = generateRandomInclusive(locationXLowBound, locationXHighBound);
+    var locationY = generateRandomInclusive(locationYLowBound, locationYHighBound);
+    var featuresCount = generateRandomInclusive(0, FEATURES.length);
     var allFeatures = FEATURES.slice();
     var offerFeatures = [];
     for (var j = 0; j < featuresCount; j++) {
-      var featureIndex = Math.floor(Math.random() * allFeatures.length);
-      offerFeatures[j] = allFeatures[featureIndex];
-      allFeatures.splice(featureIndex, 1);
+      offerFeatures = offerFeatures.concat(allFeatures.splice(generateRandomIndex(allFeatures.length), 1));
     }
-    var rooms = roomsLowBound + Math.floor(Math.random() * (roomsHighBound - roomsLowBound + 1));
-    var guests = rooms * Math.floor(Math.random() * 3 + 1);
+    var rooms = generateRandomInclusive(roomsLowBound, roomsHighBound);
+    var guests = generateRandomInclusive(rooms, rooms * MAX_GUESTS_PER_ROOM);
 
-    ads[i] = {
+    ads.push({
       author: {
         avatar: i + 1 > 9 ? avatarBase + (i + 1) + '.png' : avatarBase + '0' + (i + 1) + '.png',
       },
       offer: {
         title: offerTitles[titleIndex],
         address: locationX + ', ' + locationY,
-        price: priceLowBound + Math.floor(Math.random() * (priceHighBound - priceLowBound + 1)),
-        type: OFFER_TYPES[Math.floor(Math.random() * OFFER_TYPES.length)],
+        price: generateRandomInclusive(priceLowBound, priceHighBound),
+        type: OFFER_TYPES[generateRandomIndex(OFFER_TYPES.length)],
         rooms: rooms,
         guests: guests,
-        checkin: CHECKIN_TIMES[Math.floor(Math.random() * CHECKIN_TIMES.length)],
-        checkout: CHECKOUT_TIMES[Math.floor(Math.random() * CHECKOUT_TIMES.length)],
+        checkin: CHECKIN_TIMES[generateRandomIndex(CHECKIN_TIMES.length)],
+        checkout: CHECKOUT_TIMES[generateRandomIndex(CHECKOUT_TIMES.length)],
         features: offerFeatures,
         description: '',
         photos: [],
@@ -95,7 +102,7 @@ var generateAds = function () {
         x: locationX,
         y: locationY,
       },
-    };
+    });
     offerTitles.splice(titleIndex, 1);
   }
 
