@@ -296,20 +296,18 @@ var popupCloseButtonClickHandler = function (evt) {
   }
 };
 
+var mainPin = document.querySelector('.map__pin--main');
+
 var mainPinMouseupHandler = function () {
   var ads = generateAds();
   fadeMapIn();
   insertMapPins(createPinElements(ads));
   enableAdForm();
 
-  var mainPin = document.querySelector('.map__pin--main');
-  if (mainPin) {
-    mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
-  }
+  mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
 };
 
 var initApp = function () {
-  var mainPin = document.querySelector('.map__pin--main');
   if (mainPin) {
     mainPin.addEventListener('mouseup', mainPinMouseupHandler);
   }
