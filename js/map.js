@@ -255,13 +255,19 @@ var popupEscPressHandler = function (evt) {
   }
 };
 
+var deactivateOtherPins = function () {
+  var otherActivePins = document.querySelectorAll('.map__pin--active');
+  if (otherActivePins) {
+    for (var i = 0; i < otherActivePins.length; i++) {
+      otherActivePins[i].classList.remove('map__pin--active');
+    }
+  }
+};
+
 var mapPinClickHandler = function (evt) {
   var target = evt.target;
   if (target.classList.contains('map__pin')) {
-    var otherActivePin = document.querySelector('.map__pin--active');
-    if (otherActivePin) {
-      otherActivePin.classList.remove('map__pin--active');
-    }
+    deactivateOtherPins();
     var adData = target.dataset.ad;
     if (adData) {
       var pinAd = JSON.parse(adData);
@@ -279,10 +285,7 @@ var closePopup = function () {
     popup.parentElement.removeChild(popup);
   }
 
-  var activePin = document.querySelector('.map__pin--active');
-  if (activePin) {
-    activePin.classList.remove('map__pin--active');
-  }
+  deactivateOtherPins();
 
   document.removeEventListener('keydown', popupEscPressHandler);
 };
@@ -298,6 +301,11 @@ var mainPinMouseupHandler = function () {
   fadeMapIn();
   insertMapPins(createPinElements(ads));
   enableAdForm();
+
+  var mainPin = document.querySelector('.map__pin--main');
+  if (mainPin) {
+    mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
+  }
 };
 
 var initApp = function () {
