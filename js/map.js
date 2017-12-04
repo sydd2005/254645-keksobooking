@@ -1,5 +1,7 @@
 'use strict';
 
+var ESC_KEYCODE = 27;
+
 var ADS_COUNT = 8;
 var MAX_GUESTS_PER_ROOM = 3;
 
@@ -128,12 +130,14 @@ var createPinElements = function (ads) {
     buttonElement.style.left = ads[i].location.x + 'px';
     buttonElement.style.top = (ads[i].location.y - pinSizeY / 2 - pinPointerHeight) + 'px';
     buttonElement.className = 'map__pin';
+    buttonElement.dataset.ad = JSON.stringify(ads[i]);
 
     var imgElement = document.createElement('img');
     imgElement.src = ads[i].author.avatar;
     imgElement.width = avatarWidth;
     imgElement.height = avatarHeight;
     imgElement.draggable = false;
+    imgElement.style.pointerEvents = 'none';
 
     buttonElement.appendChild(imgElement);
     pins[i] = buttonElement;
@@ -217,9 +221,13 @@ var createAdElement = function (ad) {
   return adElement;
 };
 
-var insertAdElement = function (adElement) {
+var showAdElement = function (adElement) {
   var mapElement = document.querySelector('.map');
   if (mapElement) {
+    var existingAdElements = mapElement.querySelectorAll('.' + adElement.className.replace(' ', '.'));
+    for (var i = 0; i < existingAdElements.length; i++) {
+      mapElement.removeChild(existingAdElements[i]);
+    }
     var filterContainersElement = mapElement.querySelector('.map__filters-container');
     if (filterContainersElement) {
       mapElement.insertBefore(adElement, filterContainersElement);
@@ -227,11 +235,92 @@ var insertAdElement = function (adElement) {
   }
 };
 
-var showAds = function () {
+var enableAdForm = function () {
+  var adForm = document.querySelector('.notice__form');
+  if (adForm) {
+    adForm.classList.remove('notice__form--disabled');
+    var adFormFieldsets = adForm.querySelectorAll('fieldset');
+    if (adFormFieldsets) {
+      for (var i = 0; i < adFormFieldsets.length; i++) {
+        adFormFieldsets[i].disabled = false;
+      }
+    }
+  }
+};
+
+var popupEscPressHandler = function (evt) {
+  if (evt.keyCode === ESC_KEYCODE) {
+    evt.preventDefault();
+    closePopup();
+  }
+};
+
+var deactivateOtherPins = function () {
+  var otherActivePins = document.querySelectorAll('.map__pin--active');
+  if (otherActivePins) {
+    for (var i = 0; i < otherActivePins.length; i++) {
+      otherActivePins[i].classList.remove('map__pin--active');
+    }
+  }
+};
+
+var mapPinClickHandler = function (evt) {
+  var target = evt.target;
+  if (target.classList.contains('map__pin')) {
+    deactivateOtherPins();
+    var adData = target.dataset.ad;
+    if (adData) {
+      var pinAd = JSON.parse(adData);
+      showAdElement(createAdElement(pinAd));
+    }
+    target.classList.add('map__pin--active');
+  }
+
+  document.addEventListener('keydown', popupEscPressHandler);
+};
+
+var closePopup = function () {
+  var popup = document.querySelector('.popup');
+  if (popup) {
+    popup.parentElement.removeChild(popup);
+  }
+
+  deactivateOtherPins();
+
+  document.removeEventListener('keydown', popupEscPressHandler);
+};
+
+var popupCloseButtonClickHandler = function (evt) {
+  if (evt.target.classList.contains('popup__close')) {
+    closePopup();
+  }
+};
+
+var mainPin = document.querySelector('.map__pin--main');
+
+var mainPinMouseupHandler = function () {
   var ads = generateAds();
   fadeMapIn();
   insertMapPins(createPinElements(ads));
-  insertAdElement(createAdElement(ads[0]));
+  enableAdForm();
+
+  mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
 };
 
-showAds();
+var initApp = function () {
+  if (mainPin) {
+    mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+  }
+
+  var mapPinsElement = document.querySelector('.map__pins');
+  if (mapPinsElement) {
+    mapPinsElement.addEventListener('click', mapPinClickHandler);
+  }
+
+  var mapElement = document.querySelector('.map');
+  if (mapElement) {
+    mapElement.addEventListener('click', popupCloseButtonClickHandler);
+  }
+};
+
+initApp();
