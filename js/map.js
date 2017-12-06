@@ -362,10 +362,10 @@ var generateCapacityOptionsFragment = function (capacity, selectedValue) {
   return optionsFragment;
 };
 
-var setUpGuestsCapacitySync = function () {
-  var roomsAmountSelect = document.querySelector('#room_number');
-  var capacitySelect = document.querySelector('#capacity');
+var roomsAmountSelect = document.querySelector('#room_number');
+var capacitySelect = document.querySelector('#capacity');
 
+var setUpGuestsCapacitySync = function () {
   if (roomsAmountSelect && capacitySelect) {
     roomsAmountSelect.addEventListener('input', function () {
       var newRoomsAmount = roomsAmountSelect.value;
@@ -378,26 +378,51 @@ var setUpGuestsCapacitySync = function () {
   }
 };
 
-var setInvalid = function (element, message, outlineColor) {
-  element.setCustomValidity(message);
-  element.style.boxShadow = '0 0 4px 1px ' + outlineColor;
+var setInvalid = function (element, outlineColor) {
+  element.style.borderColor = outlineColor;
 };
 
 var setValid = function (element) {
-  element.setCustomValidity('');
-  element.style.boxShadow = 'none';
+  element.style.borderColor = '';
 };
 
 var setUpCustomValidation = function () {
   var noticeForm = document.querySelector('.notice__form');
   if (noticeForm) {
     var addressInput = noticeForm.querySelector('#address');
+    var formElements = noticeForm.querySelectorAll('[name]');
     noticeForm.addEventListener('submit', function (evt) {
       evt.preventDefault();
+      var canBeSubmitted = true;
+      var errorOutlineColor = '#ff1111';
+
+      var roomsAmount = +roomsAmountSelect.value;
+      var capacity = +capacitySelect.value;
+      if (roomsAmount === 100) {
+        var capacityErrorMessage = capacity !== 0 ? 'something bad happened!' : '';
+      } else {
+        capacityErrorMessage = roomsAmount < capacity ? 'something bad happened!' : '';
+      }
+      capacitySelect.setCustomValidity(capacityErrorMessage);
+
+      for (var i = 0; i < formElements.length; i++) {
+        var currentElement = formElements[i];
+        if (!currentElement.validity.valid) {
+          setInvalid(currentElement, errorOutlineColor);
+          canBeSubmitted = false;
+        } else {
+          setValid(currentElement);
+        }
+      }
+
       if (!addressInput.value) {
-        setInvalid(addressInput, 'That\'s some bad hat, Harry!', '#ff6547');
+        setInvalid(addressInput, errorOutlineColor);
+        canBeSubmitted = false;
       } else {
         setValid(addressInput);
+      }
+
+      if (canBeSubmitted) {
         noticeForm.submit();
       }
     });

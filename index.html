@@ -89,7 +89,8 @@
           action="https://js.dump.academy/keksobooking"
           method="post"
           enctype="multipart/form-data"
-          autocomplete="off">
+          autocomplete="off"
+          novalidate>
       <fieldset class="notice__header" disabled>
         <legend>Ваша фотография (для карты)</legend>
         <div class="notice__photo">
@@ -111,7 +112,7 @@
 
       <fieldset class="form__element form__element--wide" disabled>
         <label for="address">Адрес</label>
-        <input id="address" name="address" type="text" required readonly>
+        <input id="address" name="address" type="text" readonly value="Tokyo, Roppongi Hills">
       </fieldset>
 
       <fieldset class="form__element" disabled>
