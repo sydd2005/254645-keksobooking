@@ -378,6 +378,16 @@ var setUpGuestsCapacitySync = function () {
   }
 };
 
+var setInvalid = function (element, message, outlineColor) {
+  element.setCustomValidity(message);
+  element.style.boxShadow = '0 0 4px 1px ' + outlineColor;
+};
+
+var setValid = function (element) {
+  element.setCustomValidity('');
+  element.style.boxShadow = 'none';
+};
+
 var setUpCustomValidation = function () {
   var noticeForm = document.querySelector('.notice__form');
   if (noticeForm) {
@@ -385,8 +395,9 @@ var setUpCustomValidation = function () {
     noticeForm.addEventListener('submit', function (evt) {
       evt.preventDefault();
       if (!addressInput.value) {
-        addressInput.setCustomValidity('That\'s some bad hat, Harry!');
+        setInvalid(addressInput, 'That\'s some bad hat, Harry!', '#ff6547');
       } else {
+        setValid(addressInput);
         noticeForm.submit();
       }
     });
