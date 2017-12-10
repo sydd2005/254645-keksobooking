@@ -136,11 +136,19 @@
     }
   };
 
+  var setAddressValue = function (address) {
+    var addressInput = document.querySelector('#address');
+    if (addressInput) {
+      addressInput.value = address;
+    }
+  };
+
   window.form = {
     setUpSyncOfCheckTimes: setUpSyncOfCheckTimes,
     setUpMinPricesSync: setUpMinPricesSync,
     setUpGuestsCapacitySync: setUpGuestsCapacitySync,
     setUpCustomValidation: setUpCustomValidation,
     enableAdForm: enableAdForm,
+    setAddressValue: setAddressValue,
   };
 })();
