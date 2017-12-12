@@ -1,8 +1,9 @@
 'use strict';
 
 (function () {
+  var mapElement = document.querySelector('.map');
+
   var fadeMapIn = function () {
-    var mapElement = document.querySelector('.map');
     if (mapElement) {
       mapElement.classList.remove('map--faded');
     }
@@ -37,13 +38,18 @@
     y: 0,
   };
 
+  var adPinsInserted = false;
+
   var mainPinMouseupHandler = function (evt) {
     evt.preventDefault();
 
-    var ads = window.data.generateAds();
-    fadeMapIn();
-    insertMapPins(createPinElements(ads));
-    window.form.enableAdForm();
+    if (!adPinsInserted) {
+      var ads = window.data.generateAds();
+      fadeMapIn();
+      insertMapPins(createPinElements(ads));
+      window.form.enableAdForm();
+      adPinsInserted = true;
+    }
   };
 
   var mainPinMousemoveHandler = function (evt) {
@@ -51,8 +57,9 @@
     var mainPinPointerHeight = 18;
     var mainPinSize = 65;
     var deltaY = mainPinSize / 2 + mainPinPointerHeight;
-    var lowestY = 100 - deltaY;
-    var highestY = 500 - deltaY;
+    var mapHeight = mapElement.clientHeight;
+    var lowestY = mapHeight - (100 + deltaY);
+    var highestY = mapHeight - (500 + deltaY);
 
     var shift = {
       x: startCoords.x - evt.clientX,
@@ -66,11 +73,11 @@
 
     var newXCoord = mainPin.offsetLeft - shift.x;
     var newYCoord = mainPin.offsetTop - shift.y;
-    newYCoord = newYCoord < lowestY ? lowestY : newYCoord;
-    newYCoord = newYCoord > highestY ? highestY : newYCoord;
+    newYCoord = newYCoord > lowestY ? lowestY : newYCoord;
+    newYCoord = newYCoord < highestY ? highestY : newYCoord;
     mainPin.style.left = newXCoord + 'px';
     mainPin.style.top = newYCoord + 'px';
-    window.form.setAddressValue('x: ' + newXCoord + ', y: ' + (newYCoord + deltaY));
+    window.form.setAddressValue('x: ' + newXCoord + ', y: ' + (mapHeight - newYCoord - deltaY));
   };
 
   var mainPinMousedownHandler = function (evt) {
@@ -88,7 +95,6 @@
   var removeMainPinListeners = function () {
     mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     mainPin.removeEventListener('mousemove', mainPinMousemoveHandler);
-    mainPin.removeEventListener('mousedown', mainPinMousedownHandler);
   };
 
   var addMapEventListeners = function () {
@@ -101,7 +107,6 @@
       mapPinsElement.addEventListener('click', window.pin.mapPinClickHandler);
     }
 
-    var mapElement = document.querySelector('.map');
     if (mapElement) {
       mapElement.addEventListener('click', window.card.popupCloseButtonClickHandler);
       mapElement.addEventListener('mouseup', removeMainPinListeners);
