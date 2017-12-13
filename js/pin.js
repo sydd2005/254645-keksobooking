@@ -31,7 +31,7 @@
       var adData = target.dataset.ad;
       if (adData) {
         var pinAd = JSON.parse(adData);
-        window.card.showAdElement(window.card.createAdElement(pinAd));
+        window.showCard(window.card.createAdElement(pinAd));
       }
       target.classList.add('map__pin--active');
     }
