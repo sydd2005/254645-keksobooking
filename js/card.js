@@ -45,13 +45,13 @@
           checkInOutElement.textContent = 'Заезд после ' + ad.offer.checkin + ', выезд до ' + ad.offer.checkout;
         }
 
-        var featuresElement = adElement.querySelector('.popup__features');
-        if (featuresElement) {
-          featuresElement.innerHTML = '';
+        var featureListElement = adElement.querySelector('.popup__features');
+        if (featureListElement) {
+          featureListElement.innerHTML = '';
           for (var j = 0; j < ad.offer.features.length; j++) {
             var featureElement = document.createElement('li');
             featureElement.className = 'feature feature--' + ad.offer.features[j];
-            featuresElement.appendChild(featureElement);
+            featureListElement.appendChild(featureElement);
           }
         }
 
@@ -63,6 +63,24 @@
         var avatarElement = adElement.querySelector('.popup__avatar');
         if (avatarElement) {
           avatarElement.src = ad.author.avatar;
+        }
+
+        var pictureListElement = adElement.querySelector('.popup__pictures');
+        if (pictureListElement) {
+          pictureListElement.innerHTML = '';
+          pictureListElement.style.display = 'flex';
+          pictureListElement.style.flexWrap = 'wrap';
+          ad.offer.photos.forEach(function (value) {
+            var pictureListItemElement = document.createElement('li');
+            var pictureImgElement = document.createElement('img');
+            pictureImgElement.src = value;
+            pictureImgElement.style.maxWidth = '100%';
+            pictureImgElement.style.maxHeight = '45px';
+            pictureListItemElement.style.maxWidth = '25%';
+            pictureListItemElement.style.marginRight = '4px';
+            pictureListItemElement.appendChild(pictureImgElement);
+            pictureListElement.appendChild(pictureListItemElement);
+          });
         }
       }
     }

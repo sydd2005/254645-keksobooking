@@ -1,6 +1,8 @@
 'use strict';
 
 (function () {
+  var RESPONSE_STATUS_OK = 200;
+
   var LOAD_DATA_ENDPOINT = 'https://1510.dump.academy/keksobooking/data';
   var SAVE_DATA_ENDPOINT = 'https://1510.dump.academy/keksobooking';
 
@@ -9,7 +11,7 @@
     xhr.responseType = 'json';
 
     xhr.addEventListener('load', function () {
-      if (xhr.status === 200) {
+      if (xhr.status === RESPONSE_STATUS_OK) {
         onSuccess(xhr.response);
       } else {
         onError('Некорректный статус ответа: ' + xhr.status + ' ' + xhr.statusText);
