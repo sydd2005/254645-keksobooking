@@ -40,15 +40,18 @@
 
   var adPinsInserted = false;
 
+  var showAds = function (ads) {
+    fadeMapIn();
+    insertMapPins(createPinElements(ads));
+    window.form.enableAdForm();
+    adPinsInserted = true;
+  };
+
   var mainPinMouseupHandler = function (evt) {
     evt.preventDefault();
 
     if (!adPinsInserted) {
-      var ads = window.data.generateAds();
-      fadeMapIn();
-      insertMapPins(createPinElements(ads));
-      window.form.enableAdForm();
-      adPinsInserted = true;
+      window.backend.load(showAds, window.showMessage);
     }
   };
 
