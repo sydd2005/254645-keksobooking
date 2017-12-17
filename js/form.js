@@ -74,11 +74,17 @@
     element.style.borderColor = '';
   };
 
+  var noticeForm = document.querySelector('.notice__form');
+
+  var resetForm = function () {
+    noticeForm.reset();
+  };
+
   var setUpCustomValidation = function () {
-    var noticeForm = document.querySelector('.notice__form');
     if (noticeForm) {
       var addressInput = noticeForm.querySelector('#address');
       var formElements = noticeForm.querySelectorAll('[name]');
+
       noticeForm.addEventListener('submit', function (evt) {
         evt.preventDefault();
         var canBeSubmitted = true;
@@ -111,7 +117,7 @@
         }
 
         if (canBeSubmitted) {
-          noticeForm.submit();
+          window.backend.save(new FormData(noticeForm), resetForm, window.showMessage);
         }
       });
     }
