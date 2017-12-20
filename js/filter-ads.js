@@ -21,7 +21,7 @@
 
   var generateFilterListener = function (filterName, cb) {
     return function (evt) {
-      filters[filterName] = evt.target.checked !== void 0 ? evt.target.checked : evt.target.value;
+      filters[filterName] = typeof evt.target.checked !== 'undefined' ? evt.target.checked : evt.target.value;
       window.debounce(cb);
     };
   };
@@ -35,7 +35,7 @@
   }
 
   var matchesAny = function (value) {
-    return value === void 0 || value === 'any';
+    return typeof value === 'undefined' || value === 'any';
   };
 
   var matchesPriceRange = function (rangeName, offerPrice) {
