@@ -10,6 +10,7 @@
     window.form.setUpGuestsCapacitySync();
 
     window.form.setUpCustomValidation();
+
   };
 
   initApp();
