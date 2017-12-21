@@ -32,6 +32,19 @@
     });
   };
 
+  var createPhotoListItemElement = function (photoFile) {
+    var photoListItemElement = document.createElement('li');
+    photoListItemElement.style.marginBottom = '5px';
+
+    var previewImgElement = document.createElement('img');
+    previewImgElement.style.maxWidth = '100%';
+    showPreview(photoFile, previewImgElement);
+
+    photoListItemElement.appendChild(previewImgElement);
+
+    return photoListItemElement;
+  };
+
   var addAdPhotosLoading = function () {
     var adPhotosFileInput = document.querySelector('#images');
     adPhotosFileInput.multiple = true;
@@ -40,31 +53,23 @@
     adPhotosFileInput.addEventListener('change', function () {
       var files = adPhotosFileInput.files;
 
-      var pictureListElement = adPhotosPreviewContainer.querySelector('#images-list');
-      if (pictureListElement) {
-        adPhotosPreviewContainer.removeChild(pictureListElement);
-        pictureListElement.innerHTML = '';
+      var photoListElement = adPhotosPreviewContainer.querySelector('#images-list');
+      if (photoListElement) {
+        adPhotosPreviewContainer.removeChild(photoListElement);
+        photoListElement.innerHTML = '';
       } else {
-        pictureListElement = document.createElement('ul');
-        pictureListElement.id = 'images-list';
+        photoListElement = document.createElement('ul');
+        photoListElement.id = 'images-list';
       }
-      pictureListElement.style = 'display: flex; flex-direction: column; padding: 0; list-style: none;';
+      photoListElement.style = 'display: flex; flex-direction: column; padding: 0; list-style: none;';
 
-      for (var i = 0; i < files.length; i++) {
-        if (isImageFile(files[i])) {
-          var pictureListItemElement = document.createElement('li');
-          pictureListItemElement.style.marginBottom = '5px';
-
-          var previewImgElement = document.createElement('img');
-          previewImgElement.style.maxWidth = '100%';
-          showPreview(files[i], previewImgElement);
-
-          pictureListItemElement.appendChild(previewImgElement);
-          pictureListElement.appendChild(pictureListItemElement);
+      [].forEach.call(files, function (file) {
+        if (isImageFile(file)) {
+          photoListElement.appendChild(createPhotoListItemElement(file));
         }
-      }
+      });
 
-      adPhotosPreviewContainer.appendChild(pictureListElement);
+      adPhotosPreviewContainer.appendChild(photoListElement);
     });
   };
 
