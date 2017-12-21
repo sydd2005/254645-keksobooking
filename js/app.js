@@ -10,6 +10,8 @@
     window.form.setUpGuestsCapacitySync();
 
     window.form.setUpCustomValidation();
+
+    window.photoPreview.addAvatarLoading();
   };
 
   initApp();

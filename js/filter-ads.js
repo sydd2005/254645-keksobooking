@@ -19,19 +19,12 @@
 
   var filters = {};
 
-  var generateFilterListener = function (filterName, cb) {
-    return function (evt) {
-      filters[filterName] = typeof evt.target.checked !== 'undefined' ? evt.target.checked : evt.target.value;
-      window.debounce(cb);
-    };
-  };
-
-  var filtersElement = document.querySelector('.map__filters');
-  if (filtersElement) {
-    var filterElements = filtersElement.querySelectorAll('[name]');
-    for (var i = 0; i < filterElements.length; i++) {
-      filterElements[i].addEventListener('change', generateFilterListener(filterElements[i].id, window.map.updateMapPins));
-    }
+  var filtersFormElement = document.querySelector('.map__filters');
+  if (filtersFormElement) {
+    filtersFormElement.addEventListener('change', function (evt) {
+      filters[evt.target.id] = typeof evt.target.checked !== 'undefined' ? evt.target.checked : evt.target.value;
+      window.debounce(window.map.updateMapPins);
+    });
   }
 
   var matchesAny = function (value) {
