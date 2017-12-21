@@ -11,7 +11,6 @@
 
     window.form.setUpCustomValidation();
 
-    window.photoPreview.addAvatarLoading();
   };
 
   initApp();
