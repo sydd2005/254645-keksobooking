@@ -19,7 +19,7 @@
     reader.readAsDataURL(file);
   };
 
-  var addAvatarLoading = function () {
+  var bindAvatarLoading = function () {
     var avatarFileInput = document.querySelector('#avatar');
     var avatarPreviewElement = document.querySelector('.notice__preview img');
 
@@ -45,7 +45,7 @@
     return photoListItemElement;
   };
 
-  var addAdPhotosLoading = function () {
+  var bindAdPhotosLoading = function () {
     var adPhotosFileInput = document.querySelector('#images');
     adPhotosFileInput.multiple = true;
     var adPhotosPreviewContainer = document.querySelector('.form__photo-container');
@@ -74,7 +74,7 @@
   };
 
   window.photoPreview = {
-    addAvatarLoading: addAvatarLoading,
-    addAdPhotosLoading: addAdPhotosLoading,
+    bindAvatarLoading: bindAvatarLoading,
+    bindAdPhotosLoading: bindAdPhotosLoading,
   };
 })();
