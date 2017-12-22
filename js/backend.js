@@ -2,7 +2,7 @@
 
 (function () {
   var RESPONSE_STATUS_OK = 200;
-  var RESPONSE_TIMEOUT = 5000;
+  var RESPONSE_TIMEOUT = 10000;
 
   var LOAD_DATA_ENDPOINT = 'https://1510.dump.academy/keksobooking/data';
   var SAVE_DATA_ENDPOINT = 'https://1510.dump.academy/keksobooking';
