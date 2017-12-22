@@ -76,6 +76,12 @@
 
   var noticeForm = document.querySelector('.notice__form');
 
+  var bindFormReset = function () {
+    noticeForm.addEventListener('reset', function () {
+      window.photoPreview.resetPreviews();
+    });
+  };
+
   var resetForm = function () {
     noticeForm.reset();
   };
@@ -148,6 +154,7 @@
     setUpMinPricesSync: setUpMinPricesSync,
     setUpGuestsCapacitySync: setUpGuestsCapacitySync,
     setUpCustomValidation: setUpCustomValidation,
+    bindFormReset: bindFormReset,
     enableAdForm: enableAdForm,
     setAddressValue: setAddressValue,
   };

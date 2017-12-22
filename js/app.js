@@ -10,6 +10,7 @@
     window.form.setUpGuestsCapacitySync();
 
     window.form.setUpCustomValidation();
+    window.form.bindFormReset();
 
     window.photoPreview.bindAvatarLoading();
     window.photoPreview.bindAdPhotosLoading();
