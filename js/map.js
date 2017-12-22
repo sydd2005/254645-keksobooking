@@ -50,6 +50,7 @@
   var showAds = function (ads) {
     loadedAds = ads;
     fadeMapIn();
+    window.form.syncRoomsWithGuests();
     window.form.enableAdForm();
     window.debounce(updateMapPins);
     adPinsInserted = true;

@@ -19,9 +19,28 @@
     reader.readAsDataURL(file);
   };
 
+  var avatarPreviewElement = document.querySelector('.notice__preview img');
+  var defaultAvatar = avatarPreviewElement.src;
+  var adPhotosPreviewContainer = document.querySelector('.form__photo-container');
+
+  var resetAvatar = function () {
+    avatarPreviewElement.src = defaultAvatar;
+  };
+
+  var resetAdPhotos = function () {
+    var photoListElement = adPhotosPreviewContainer.querySelector('#images-list');
+    if (photoListElement) {
+      adPhotosPreviewContainer.removeChild(photoListElement);
+    }
+  };
+
+  var resetPreviews = function () {
+    resetAvatar();
+    resetAdPhotos();
+  };
+
   var bindAvatarLoading = function () {
     var avatarFileInput = document.querySelector('#avatar');
-    var avatarPreviewElement = document.querySelector('.notice__preview img');
 
     avatarFileInput.addEventListener('change', function () {
       var file = avatarFileInput.files[0];
@@ -48,7 +67,6 @@
   var bindAdPhotosLoading = function () {
     var adPhotosFileInput = document.querySelector('#images');
     adPhotosFileInput.multiple = true;
-    var adPhotosPreviewContainer = document.querySelector('.form__photo-container');
 
     adPhotosFileInput.addEventListener('change', function () {
       var files = adPhotosFileInput.files;
@@ -76,5 +94,6 @@
   window.photoPreview = {
     bindAvatarLoading: bindAvatarLoading,
     bindAdPhotosLoading: bindAdPhotosLoading,
+    resetPreviews: resetPreviews,
   };
 })();

@@ -53,16 +53,18 @@
   var roomsAmountSelect = document.querySelector('#room_number');
   var capacitySelect = document.querySelector('#capacity');
 
+  var syncRoomsWithGuests = function () {
+    var newRoomsAmount = roomsAmountSelect.value;
+    var previouslySelectedValue = capacitySelect.value;
+    capacitySelect.innerHTML = '';
+    var newCapacity = newRoomsAmount === '100' ? 0 : +newRoomsAmount;
+    var newOptionsFragment = generateCapacityOptionsFragment(newCapacity, previouslySelectedValue);
+    capacitySelect.appendChild(newOptionsFragment);
+  };
+
   var setUpGuestsCapacitySync = function () {
     if (roomsAmountSelect && capacitySelect) {
-      roomsAmountSelect.addEventListener('input', function () {
-        var newRoomsAmount = roomsAmountSelect.value;
-        var previouslySelectedValue = capacitySelect.value;
-        capacitySelect.innerHTML = '';
-        var newCapacity = newRoomsAmount === '100' ? 0 : +newRoomsAmount;
-        var newOptionsFragment = generateCapacityOptionsFragment(newCapacity, previouslySelectedValue);
-        capacitySelect.appendChild(newOptionsFragment);
-      });
+      roomsAmountSelect.addEventListener('input', syncRoomsWithGuests);
     }
   };
 
@@ -75,6 +77,12 @@
   };
 
   var noticeForm = document.querySelector('.notice__form');
+
+  var bindFormReset = function () {
+    noticeForm.addEventListener('reset', function () {
+      window.photoPreview.resetPreviews();
+    });
+  };
 
   var resetForm = function () {
     noticeForm.reset();
@@ -144,10 +152,12 @@
   };
 
   window.form = {
+    syncRoomsWithGuests: syncRoomsWithGuests,
     setUpSyncOfCheckTimes: setUpSyncOfCheckTimes,
     setUpMinPricesSync: setUpMinPricesSync,
     setUpGuestsCapacitySync: setUpGuestsCapacitySync,
     setUpCustomValidation: setUpCustomValidation,
+    bindFormReset: bindFormReset,
     enableAdForm: enableAdForm,
     setAddressValue: setAddressValue,
   };
