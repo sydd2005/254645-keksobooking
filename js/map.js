@@ -104,7 +104,7 @@
     mainPin.addEventListener('mouseup', mainPinMouseupHandler);
   };
 
-  var removeMainPinListeners = function () {
+  var mapElementMouseupHandler = function () {
     mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
     mainPin.removeEventListener('mousemove', mainPinMousemoveHandler);
   };
@@ -121,7 +121,7 @@
 
     if (mapElement) {
       mapElement.addEventListener('click', window.card.popupCloseButtonClickHandler);
-      mapElement.addEventListener('mouseup', removeMainPinListeners);
+      mapElement.addEventListener('mouseup', mapElementMouseupHandler);
     }
   };
 

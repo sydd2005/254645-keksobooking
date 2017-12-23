@@ -2,6 +2,7 @@
 
 (function () {
   var MAX_ADS = 5;
+  var VALUE_ANY = 'any';
   var PRICE_RANGES = {
     low: {
       from: 0,
@@ -28,7 +29,7 @@
   }
 
   var matchesAny = function (value) {
-    return typeof value === 'undefined' || value === 'any';
+    return typeof value === 'undefined' || value === VALUE_ANY;
   };
 
   var matchesPriceRange = function (rangeName, offerPrice) {

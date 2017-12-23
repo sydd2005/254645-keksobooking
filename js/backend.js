@@ -15,16 +15,16 @@
       if (xhr.status === RESPONSE_STATUS_OK) {
         onSuccess(xhr.response);
       } else {
-        onError('Некорректный статус ответа: ' + xhr.status + ' ' + xhr.statusText);
+        onError('Некорректный статус ответа: ' + xhr.status + ' ' + xhr.statusText, window.SeverityLevel.ERROR);
       }
     });
 
     xhr.addEventListener('error', function () {
-      onError('Произошла ошибка соединения.');
+      onError('Произошла ошибка соединения.', window.SeverityLevel.ERROR);
     });
 
     xhr.addEventListener('timeout', function () {
-      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс.');
+      onError('Запрос не успел выполниться за ' + xhr.timeout + ' мс.', window.SeverityLevel.ERROR);
     });
 
     xhr.timeout = RESPONSE_TIMEOUT;

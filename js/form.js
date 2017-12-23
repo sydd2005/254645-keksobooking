@@ -62,9 +62,13 @@
     capacitySelect.appendChild(newOptionsFragment);
   };
 
+  var roomsAmountSelectInputHandler = function () {
+    syncRoomsWithGuests();
+  };
+
   var setUpGuestsCapacitySync = function () {
     if (roomsAmountSelect && capacitySelect) {
-      roomsAmountSelect.addEventListener('input', syncRoomsWithGuests);
+      roomsAmountSelect.addEventListener('input', roomsAmountSelectInputHandler);
     }
   };
 
@@ -88,6 +92,11 @@
     noticeForm.reset();
   };
 
+  var successfulSaveHandler = function () {
+    window.showMessage('Данные успешно отправлены!');
+    resetForm();
+  };
+
   var setUpCustomValidation = function () {
     if (noticeForm) {
       var addressInput = noticeForm.querySelector('#address');
@@ -101,9 +110,9 @@
         var roomsAmount = +roomsAmountSelect.value;
         var capacity = +capacitySelect.value;
         if (roomsAmount === 100) {
-          var capacityErrorMessage = capacity !== 0 ? 'something bad happened!' : '';
+          var capacityErrorMessage = capacity !== 0 ? 'Количество комнат не соответствует количеству гостей!' : '';
         } else {
-          capacityErrorMessage = roomsAmount < capacity ? 'something bad happened!' : '';
+          capacityErrorMessage = roomsAmount < capacity ? 'Количество комнат не соответствует количеству гостей!  ' : '';
         }
         capacitySelect.setCustomValidity(capacityErrorMessage);
 
@@ -125,7 +134,7 @@
         }
 
         if (canBeSubmitted) {
-          window.backend.save(new FormData(noticeForm), resetForm, window.showMessage);
+          window.backend.save(new FormData(noticeForm), successfulSaveHandler, window.showMessage);
         }
       });
     }
