@@ -59,37 +59,45 @@
   var mainPinMouseupHandler = function (evt) {
     evt.preventDefault();
 
-    if (!adPinsInserted) {
-      window.backend.load(showAds, window.showMessage);
-    }
+    window.backend.load(showAds, window.showMessage);
+    document.removeEventListener('mouseup', mainPinMouseupHandler);
   };
+
+  var PIN_POINTER_HEIGHT = 18;
+  var PIN_CIRCLE_HEIGHT = 65;
+  var MOVE_LOW_BOUND = 100;
+  var MOVE_HIGH_BOUND = 500;
+  var pinHeight = PIN_CIRCLE_HEIGHT / 2 + PIN_POINTER_HEIGHT;
+  var mapHeight = mapElement.clientHeight;
+  var lowestY = mapHeight - (MOVE_LOW_BOUND + pinHeight);
+  var highestY = mapHeight - (MOVE_HIGH_BOUND + pinHeight);
 
   var mainPinMousemoveHandler = function (evt) {
     evt.preventDefault();
-    var mainPinPointerHeight = 18;
-    var mainPinSize = 65;
-    var deltaY = mainPinSize / 2 + mainPinPointerHeight;
-    var mapHeight = mapElement.clientHeight;
-    var lowestY = mapHeight - (100 + deltaY);
-    var highestY = mapHeight - (500 + deltaY);
 
-    var shift = {
-      x: startCoords.x - evt.clientX,
-      y: startCoords.y - evt.clientY,
-    };
+    var clientX = evt.clientX;
+    var clientY = evt.clientY + document.documentElement.scrollTop;
 
-    startCoords = {
-      x: evt.clientX,
-      y: evt.clientY,
-    };
+    if (clientY > highestY && clientY < lowestY) {
+      var shift = {
+        x: startCoords.x - clientX,
+        y: startCoords.y - clientY,
+      };
 
-    var newXCoord = mainPin.offsetLeft - shift.x;
-    var newYCoord = mainPin.offsetTop - shift.y;
-    newYCoord = newYCoord > lowestY ? lowestY : newYCoord;
-    newYCoord = newYCoord < highestY ? highestY : newYCoord;
-    mainPin.style.left = newXCoord + 'px';
-    mainPin.style.top = newYCoord + 'px';
-    window.form.setAddressValue('x: ' + newXCoord + ', y: ' + (mapHeight - newYCoord - deltaY));
+      startCoords = {
+        x: clientX,
+        y: clientY,
+      };
+
+      var pinTopLeftX = mainPin.offsetLeft - shift.x;
+      var pinTopLeftY = mainPin.offsetTop - shift.y;
+      pinTopLeftY = pinTopLeftY > lowestY ? lowestY : pinTopLeftY;
+      pinTopLeftY = pinTopLeftY < highestY ? highestY : pinTopLeftY;
+      mainPin.style.left = pinTopLeftX + 'px';
+      mainPin.style.top = pinTopLeftY + 'px';
+      var coordsText = 'x: ' + pinTopLeftX + ', y: ' + (mapHeight - pinTopLeftY - pinHeight);
+      window.form.setAddressValue(coordsText);
+    }
   };
 
   var mainPinMousedownHandler = function (evt) {
@@ -97,16 +105,17 @@
 
     startCoords = {
       x: evt.clientX,
-      y: evt.clientY,
+      y: evt.clientY + document.documentElement.scrollTop,
     };
 
-    mainPin.addEventListener('mousemove', mainPinMousemoveHandler);
-    mainPin.addEventListener('mouseup', mainPinMouseupHandler);
+    document.addEventListener('mousemove', mainPinMousemoveHandler);
+    if (!adPinsInserted) {
+      document.addEventListener('mouseup', mainPinMouseupHandler);
+    }
   };
 
   var mapElementMouseupHandler = function () {
-    mainPin.removeEventListener('mouseup', mainPinMouseupHandler);
-    mainPin.removeEventListener('mousemove', mainPinMousemoveHandler);
+    document.removeEventListener('mousemove', mainPinMousemoveHandler);
   };
 
   var addMapEventListeners = function () {
@@ -121,8 +130,8 @@
 
     if (mapElement) {
       mapElement.addEventListener('click', window.card.popupCloseButtonClickHandler);
-      mapElement.addEventListener('mouseup', mapElementMouseupHandler);
     }
+    document.addEventListener('mouseup', mapElementMouseupHandler);
   };
 
   window.map = {
